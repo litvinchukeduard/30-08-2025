@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from collections import UserList
+from enum import Enum, auto
 '''
 Система керування піснями
 
@@ -24,6 +25,8 @@ set
 #         self.duration_in_seconds = duration_in_seconds
 
 
+
+
 class PlaylistError(ValueError):
     ...
 
@@ -40,11 +43,20 @@ class PlaylistElementIsNotASong(PlaylistError):
     ...
 
 
+
+class SongGenre(Enum): # Enumerated (Enumeration)
+    DANCE = auto()
+    POP_2 = auto()
+    ROCK = auto()
+    POP = auto()
+
+
 @dataclass
 class Song:
     author: str
     name: str
     duration_in_seconds: int
+    genre: SongGenre
 
     def __post_init__(self):
         if self.author is None or len(self.author) == 0:
@@ -66,8 +78,14 @@ class Playlist(UserList):
         return super().append(song)
 
 if __name__ == '__main__':
-    song_one = Song('Author One', 'Song One', 300)
-    print(song_one)
+    song_one = Song('Author One', 'Song One', 300, SongGenre.ROCK)
+    song_two = Song('Author One', 'Song One', 300, SongGenre.ROCK)
+    # song_two.genre += "123"
+    song_two.genre = SongGenre.POP
+
+    print(song_one.genre == SongGenre.ROCK)
+
+    print(song_two)
     print(song_one.author)
     print(song_one.duration_in_seconds)
 
@@ -80,7 +98,7 @@ if __name__ == '__main__':
     playlist = Playlist()
     try:
         playlist.append(song_one)
-        playlist.append(1)
+        playlist.append(song_two)
         # playlist.append("Hello")
         # playlist.append([1, 2, 3])
     
